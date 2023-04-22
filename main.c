@@ -10,8 +10,8 @@ object GameInterface;
 
 void Main() {
 	CreateEntity(&GameInterface, "xinterface");
-	// LayerAddObject(INTERFACE_EXECUTE, &GameInterface, -100);
-	// LayerAddObject(INTERFACE_REALIZE, &GameInterface, -100);
+	LayerAddObject(INTERFACE_EXECUTE, &GameInterface, -100);
+	LayerAddObject(INTERFACE_REALIZE, &GameInterface, -100);
 
 	SendMessage(&GameInterface, "ls", MSG_INTERFACE_INIT, "resource/ini/interfaces/main.ini");
 
