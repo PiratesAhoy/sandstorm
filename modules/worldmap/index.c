@@ -4,7 +4,7 @@
 #include "storm-engine\sea_ai\script_defines.h"
 
 object GameInterface;
-object WorldMap;
+object AdvancedMap;
 
 object Sea;
 object AISea;
@@ -12,6 +12,8 @@ object SeaCameras;
 object SeaFreeCamera;
 
 object SeaShipCharacterForCamera;
+
+object Sky;
 
 void Module_Main() {
 	CreateEntity(&GameInterface, "xinterface");
@@ -21,13 +23,13 @@ void Module_Main() {
 	CreateAndMapControl("ITurnH", CE_MOUSE_X_AXIS, 0);
 	CreateAndMapControl("ITurnV", CE_MOUSE_Y_AXIS, INVERSE_CONTROL);
 	CreateAndMapControl("FreeCamera_Turn_H", CE_MOUSE_X_AXIS, 0);
-	CreateAndMapControl("FreeCamera_Turn_V", CE_MOUSE_Y_AXIS, INVERSE_CONTROL);
+	CreateAndMapControl("FreeCamera_Turn_V", CE_MOUSE_Y_AXIS, 0);
 	CreateAndMapControl("FreeCamera_Forward", 87, 0);
 	CreateAndMapControl("FreeCamera_Backward", 83, 0);
 
 	CreateSea();
 
-	CreateEntity(&WorldMap, "AdvancedMap");
+	CreateEntity(&AdvancedMap, "AdvancedMap");
 }
 
 void CreateAndMapControl(string control_name, int key_code, int state)
@@ -59,4 +61,21 @@ void CreateSea()
 	SendMessage(&AISea, "la", AI_MESSAGE_SET_CAMERAS_ATTRIBUTE, &SeaCameras);
 
 	SendMessage(&SeaCameras, "lia", AI_CAMERAS_SET_CAMERA, &SeaFreeCamera, &SeaShipCharacterForCamera);
+
+	SetEventHandler(WEATHER_CALC_FOG_COLOR, "Whr_OnCalcFogColor", 0);
+
+	// Sky
+	CreateEntity(&Sky,"Sky");
+	LayerAddObject(SEA_REFLECTION, &Sky, 1);
+	LayerAddObject(SEA_REALIZE, &Sky, -2);
+	Sky.RotateSpeed = 0.01;
+	Sky.Dir.s1 = "worldmap/skies/generated/";
+	Sky.Dir = "";
+	Sky.Size = 1000;
+	Sky.IsDone = "";
+}
+
+int Whr_OnCalcFogColor()
+{
+	return argb(0,255,255,255);
 }
