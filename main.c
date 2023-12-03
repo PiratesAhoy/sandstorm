@@ -5,7 +5,7 @@ int iScriptVersion = 54128;
 extern void Module_Main();
 
 void Main() {
-	LoadModule("geometry");
+	LoadModule("weather");
 }
 
 void LoadModule(string module)
