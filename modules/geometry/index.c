@@ -50,5 +50,5 @@ void LoadLocation()
 	SeaCameras.Camera = "FreeCamera";
 	SendMessage(&SeaCameras, "lia", AI_CAMERAS_SET_CAMERA, &FreeCamera, &SeaShipCharacterForCamera);
 
-	SendMessage(&Location, "lssl", MSG_LOCATION_ADD_MODEL, "barrel_1", "", 0);
+	SendMessage(&Location, "lssl", MSG_LOCATION_ADD_MODEL, "resource/models/barrel_1.gltf", "", 0);
 }
