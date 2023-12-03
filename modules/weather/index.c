@@ -51,7 +51,7 @@ void CreateSea()
 	CreateEntity(&SeaCameras, "SEA_CAMERAS");
 
 	SeaFreeCamera.Perspective = 1.285;
-	SeaFreeCamera.Position.y = 5;
+	SeaFreeCamera.Position.y = 10;
 	CreateEntity(&SeaFreeCamera, "FREE_CAMERA");
 
 	LayerAddObject(INFO_REALIZE, &SeaCameras, CAMERA_PRIORITY);
@@ -67,6 +67,20 @@ void CreateSea()
 	SendMessage(&SeaCameras, "lia", AI_CAMERAS_SET_CAMERA, &SeaFreeCamera, &SeaShipCharacterForCamera);
 
 	SetEventHandler(WEATHER_CALC_FOG_COLOR, "Whr_OnCalcFogColor", 0);
+
+	Sea.Sea2.Reflection = 0.9;
+	Sea.Sea2.Transparency = 0.9;
+	Sea.Sea2.Attenuation = 0.3;
+	Sea.Sea2.Fresnel = 0.45;
+	Sea.Sea2.WaterColor = argb(0, 25, 55, 80);
+	Sea.Sea2.SkyColor = argb(0, 205, 255, 255);
+	Sea.Sea2.BumpScale = 0.05;
+	Sea.Sea2.Amp1 = 7.0;
+	Sea.Sea2.AnimSpeed1 = 2.0;
+	Sea.Sea2.Scale1 = 0.3;
+	Sea.Sea2.MoveSpeed1 = "2.0, 0.0, 0.0";
+
+	Sea.Sea2.MaxSeaHeight = 100;
 }
 
 void CreateSky()
