@@ -5,7 +5,7 @@ int iScriptVersion = 54128;
 extern void Module_Main();
 
 void Main() {
-	LoadModule("weather");
+	LoadModule("geometry");
 }
 
 void LoadModule(string module)
@@ -14,6 +14,6 @@ void LoadModule(string module)
 	if(LoadSegment(module_index))
 	{
 		Module_Main();
-		UnloadSegment(module_index);
+		// UnloadSegment(module_index);
 	}
 }

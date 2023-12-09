@@ -4,12 +4,14 @@
 #include "storm-engine\interface\messages.h"
 #include "storm-engine\sea_ai\script_defines.h"
 
+#event_handler("Control Activation", "ProcessControls")
+
 object GameInterface;
 object Location;
+object Lighter;
 
-object SeaCameras;
+object Scene;
 object FreeCamera;
-object SeaShipCharacterForCamera;
 
 void Module_Main() {
 	CreateEntity(&GameInterface, "xinterface");
@@ -23,7 +25,40 @@ void Module_Main() {
 	CreateAndMapControl("FreeCamera_Forward", 87, 0);
 	CreateAndMapControl("FreeCamera_Backward", 83, 0);
 
+	CreateAndMapControl("RunTest", 32, 0); // Space
+	CreateAndMapControl("LighterToggle", 76, 0); // L
+
 	LoadLocation();
+}
+
+void RunTest()
+{
+	if (!IsEntity(&Lighter) ) {
+		if (!FindEntity(&Lighter, "Lighter") ) {
+			Trace("Failed to find location lighter");
+		}
+		else {
+			Trace("Found location lighter");
+		}
+	}
+
+	// New Ligher messages:
+	// sl "LoadPreset" <preset id>
+	// sl "SavePreset" <preset id>
+	// sll "Process" <trace shadows?> <smooth shadows?>
+	// s "SaveLight"
+
+	SendMessage(&Lighter, "sl", "LoadPreset", 1);
+	SendMessage(&Lighter, "sll", "Process", 1, 1);
+	SendMessage(&Lighter, "s", "SaveLight");
+}
+
+void ProcessControls()
+{
+	string control_name = GetEventData();
+	if (control_name == "RunTest") {
+		RunTest();
+	}
 }
 
 void CreateAndMapControl(string control_name, int key_code, int state)
@@ -37,18 +72,19 @@ void LoadLocation()
 {
 	if (!CreateEntity(&Location, "location")) {
 		Trace("LoadLocation: failed to create loc entity.");
-		return false;
 	}
 
-	CreateEntity(&SeaCameras, "SEA_CAMERAS");
+	CreateEntity(&Scene, "Scene");
 
 	FreeCamera.Perspective = 1.285;
 	CreateEntity(&FreeCamera, "FREE_CAMERA");
 
-	LayerAddObject(INFO_REALIZE, &SeaCameras, 1);
-	LayerAddObject(SEA_EXECUTE, &FreeCamera, 1);
-	SeaCameras.Camera = "FreeCamera";
-	SendMessage(&SeaCameras, "lia", AI_CAMERAS_SET_CAMERA, &FreeCamera, &SeaShipCharacterForCamera);
+	SendMessage(&Scene, "si", "SetActiveCamera", &FreeCamera);
 
-	SendMessage(&Location, "lssl", MSG_LOCATION_ADD_MODEL, "resource/models/barrel_1.gltf", "", 0);
+	LayerAddObject(EXECUTE, &Scene, 0);
+	LayerAddObject(SEA_EXECUTE, &Scene, 0);
+
+	SendMessage(&Location, "ls", MSG_LOCATION_LIGHTPATH, "day");
+	SendMessage(&Location, "lsfff", MSG_LOCATION_ADD_LIGHT, "outside_day", 0, 0, 0);
+	SendMessage(&Location, "lssl", MSG_LOCATION_ADD_MODEL, "barrel_1", "", 0);
 }

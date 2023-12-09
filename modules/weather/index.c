@@ -11,11 +11,8 @@ object GameInterface;
 
 object Sea;
 object AISea;
-object SeaCameras;
-object SeaFreeCamera;
-
-// Empty object used for camera creation
-object SeaShipCharacterForCamera;
+object Scene;
+object FreeCamera;
 
 object Sky;
 
@@ -48,23 +45,16 @@ void CreateSea()
 	LayerAddObject(SEA_EXECUTE, &Sea, SEA_PRIORITY);
 	LayerAddObject(SEA_REALIZE, &Sea, SEA_PRIORITY);
 
-	CreateEntity(&SeaCameras, "SEA_CAMERAS");
+	CreateEntity(&Scene, "Scene");
 
-	SeaFreeCamera.Perspective = 1.285;
-	SeaFreeCamera.Position.y = 10;
-	CreateEntity(&SeaFreeCamera, "FREE_CAMERA");
+	FreeCamera.Perspective = 1.285;
+	FreeCamera.Position.y = 10;
+	CreateEntity(&FreeCamera, "FREE_CAMERA");
 
-	LayerAddObject(INFO_REALIZE, &SeaCameras, CAMERA_PRIORITY);
-	LayerAddObject(SEA_EXECUTE, &SeaFreeCamera, CAMERA_PRIORITY);
+	SendMessage(&Scene, "si", "SetActiveCamera", &FreeCamera);
 
-	SeaCameras.Camera = "SeaFreeCamera";
-
-	CreateEntity(&AISea, "sea_ai");
-	LayerAddObject(SEA_EXECUTE, &AISea, SEA_PRIORITY);
-	LayerAddObject(SEA_REALIZE, &AISea, SEA_PRIORITY);
-	SendMessage(&AISea, "la", AI_MESSAGE_SET_CAMERAS_ATTRIBUTE, &SeaCameras);
-
-	SendMessage(&SeaCameras, "lia", AI_CAMERAS_SET_CAMERA, &SeaFreeCamera, &SeaShipCharacterForCamera);
+	LayerAddObject(EXECUTE, &Scene, 0);
+	LayerAddObject(SEA_EXECUTE, &Scene, 0);
 
 	SetEventHandler(WEATHER_CALC_FOG_COLOR, "Whr_OnCalcFogColor", 0);
 
