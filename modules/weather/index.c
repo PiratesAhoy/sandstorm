@@ -3,6 +3,8 @@
 #include "storm-engine\interface\messages.h"
 #include "storm-engine\sea_ai\script_defines.h"
 
+#include "modules/weather/weather_editor.c"
+
 #define SKY_PRIORITY 0
 #define SEA_PRIORITY 10
 #define CAMERA_PRIORITY 20
@@ -23,6 +25,8 @@ void Module_Main() {
 
 	CreateAndMapControl("ITurnH", CE_MOUSE_X_AXIS, 0);
 	CreateAndMapControl("ITurnV", CE_MOUSE_Y_AXIS, INVERSE_CONTROL);
+	CreateAndMapControl("ILClick", 1, 0);
+	CreateAndMapControl("IRClick", 2, 0);
 	CreateAndMapControl("FreeCamera_Turn_H", CE_MOUSE_X_AXIS, 0);
 	CreateAndMapControl("FreeCamera_Turn_V", CE_MOUSE_Y_AXIS, 0);
 	CreateAndMapControl("FreeCamera_Forward", 87, 0);
@@ -30,6 +34,8 @@ void Module_Main() {
 
 	CreateSea();
 	CreateSky();
+
+	ShowWeatherEditor();
 }
 
 void CreateAndMapControl(string control_name, int key_code, int state)
